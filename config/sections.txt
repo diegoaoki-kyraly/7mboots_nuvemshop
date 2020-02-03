@@ -1,0 +1,19 @@
+primary
+	name = Lançamentos
+	description = Los productos aparecen destacados en la página de inicio (hasta 40 productos).
+
+pague_leve
+	name = Pague 1 Leve 2
+	description = Los productos aparecen como recientes en la página de inicio (hasta 40 productos).
+
+combos
+	name = Combos
+	description = Los productos aparecen en oferta en la página de inicio (hasta 40 productos).
+
+mais_vendidos
+	name = Mais Vendidos
+	description = Los productos aparecen en oferta en la página de inicio (hasta 40 productos).
+
+natalinou
+	name = Natalinou
+	description = Los productos aparecen en oferta en la página de inicio (hasta 40 productos).

@@ -1,0 +1,29 @@
+Diamond
+	base = true
+	vertical = clothing_accesories
+	background_color = #FFFFFF
+	brand_color = #E96136
+	brand_color_secondary = #D2B356
+	background_color_secondary = #000000
+	text_color = #434343 
+Cosmetics
+	vertical = health_beauty
+	background_color   = #FFFFFF
+	brand_color        = #CEA267	
+	brand_color_secondary = #2E2E2E	
+	background_color_secondary = #272727	
+	text_color         = #272727
+Studio
+	vertical = electronics_it
+	background_color   = #F5F5F5
+	brand_color        = #723EE0	
+	brand_color_secondary = #000000	
+	background_color_secondary = #6C88A1
+	text_color         = #222222
+Fancy
+	vertical = clothing
+	background_color   = #FFFFFF
+	brand_color        = #2BB6B6
+	brand_color_secondary = #EFD541	
+	background_color_secondary = #8D74B6	
+	text_color         = #272727 
