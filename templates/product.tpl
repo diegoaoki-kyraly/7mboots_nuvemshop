@@ -51,9 +51,9 @@
                                     </div>
                                 {% endif %}
                                 {% if (product.price / 100) >= 300 %}
-                                    <div class="flag frete-gratis clear-both">
+                                    <!-- <div class="flag frete-gratis clear-both">
                                         <span class="label-text font-small-extra">{{ "Envío gratis" | translate }}</span>
-                                    </div>
+                                    </div> -->
                                 {% endif %}
                             </div>
                             <div id="product-slider-container" class="product-slider-container no-slide-effect-md {% if product.images_count == 1 %} product-single-image {% endif %}" {% if product.images_count > 1 %} style="visibility:hidden; height:0;"{% endif %}>
@@ -123,61 +123,33 @@
                                     <div class="product-price-container">
                                         <div class="price-list">
                                             <span id="compare_price_display" class="js-compare-price-display product-price-compare" {% if not product.compare_at_price or not product.display_price %}style="display:none;"{% endif %}>
-                                            {% if product.compare_at_price %}
-                                                {{ product.compare_at_price | money }}
-                                            {% endif %}
+                                                {% if product.compare_at_price %}
+                                                    <em>De: </em> <span>{{ product.compare_at_price | money }}</span>
+                                                {% endif %}
                                             </span>
                                             <span class="js-price-display product-price" id="price_display" itemprop="price" {% if product.display_price %} content="{{ product.price / 100 }}"{% endif %} {% if not product.display_price %}style="display:none;"{% endif %}>
-                                            {% if product.display_price %}
-                                                {{ product.price | money }} <em>no cartão</em>
-                                            {% endif %}
-                                            </span>
-                                            <span class="preco-desconto">
-                                                {% set avista = product.price - (product.price * 0.06) %}
-                                                <strong>{{ avista | money }}</strong> à vista
+                                                {% if product.display_price %}
+                                                    <em>Por: </em>{{ product.price | money }} <em>no cartão</em>
+                                                {% endif %}
                                             </span>
                                         </div>
                                         {% if product.show_installments and product.display_price %}
                                             {% set installments_info_base_variant = product.installments_info %}
                                             {% set installments_info = product.installments_info_from_any_variant %}
                                             {% if installments_info %}
-                                                <a href="#installments-modal" data-toggle="modal" class="js-product-payments-container js-refresh-installment-data display-when-content-ready link-module product-payment-link" {% if (not product.get_max_installments) and (not product.get_max_installments(false)) %}style="display: none;"{% endif %}>
-                                                    <div class="m-bottom-half">
-                                                        {% snipplet "installments_in_product.tpl" %}
+                                                <div class="m-bottom-half">
+                                                    {% snipplet "installments_in_product.tpl" %}
+                                                </div>
+                                                <span class="preco-desconto">
+                                                    {% set avista = product.price - (product.price * 0.06) %}
+                                                    {% set economize = product.price - avista %}
+                                                    <div class="icone-boleto"></div>
+                                                    <div class="infos-boleto">
+                                                        <span><strong>{{ avista | money }}</strong> à vista</span>
+                                                        <p>Economize: <strong>{{ economize | money }}</strong></p>
                                                     </div>
-                                                    {% set has_payment_logos = settings.payments %}
-                                                    {% if has_payment_logos %}
-                                                        <div class="span6 m-left-none m-bottom-quarter bandeiras-pagamento">
-                                                            <ul class="list-style-none p-none-left">
-                                                                {% for payment in settings.payments %}
-                                                                    {# Payment methods flags #}
-                                                                    {% if store.country == 'BR' %}
-                                                                        {% if payment in ['visa', 'mastercard'] %}
-                                                                            <li class="d-inline-block">
-                                                                                <span class="js-product-detail-payment-logo">
-                                                                                    <img src="{{ 'images/empty-placeholder.png' | static_url }}" data-src="{{ payment | payment_new_logo }}" class="lazyload product-payment-logos-img card-img" />
-                                                                                </span>
-                                                                            </li>
-                                                                        {% endif %}
-                                                                    {% else %}
-                                                                        {% if payment in ['visa', 'amex', 'mastercard'] %}
-                                                                            <li class="d-inline-block">
-                                                                                <span class="js-product-detail-payment-logo">
-                                                                                    <img src="{{ 'images/empty-placeholder.png' | static_url }}" data-src="{{ payment | payment_new_logo }}" class="lazyload product-payment-logos-img card-img" />
-                                                                                </span>
-                                                                            </li>
-                                                                        {% endif %}
-                                                                    {% endif %}
-                                                                {% endfor %}
-                                                                <li class="d-inline-block">
-                                                                    <span class="js-product-detail-payment-logo p-relative pull-left svg-text-fill opacity-80">
-                                                                        {% include "snipplets/svg/credit-card-solid.tpl" with {fa_custom_class: "svg-inline--fa fa-lg fa-credit-card payment-credit-icon pull-left"} %}
-                                                                        {% include "snipplets/svg/plus-solid.tpl" %}
-                                                                    </span>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    {% endif %}
+                                                </span>
+                                                <a href="#installments-modal" data-toggle="modal" class="js-product-payments-container js-refresh-installment-data display-when-content-ready link-module product-payment-link" {% if (not product.get_max_installments) and (not product.get_max_installments(false)) %}style="display: none;"{% endif %}>
                                                     {% if product.show_installments and product.display_price %}
                                                         <div id="btn-installments" class="btn-link clear-both" {% if (not product.get_max_installments) and (not product.get_max_installments(false)) %}style="display: none;"{% endif %}>
                                                             {% set store_set_for_new_installments_view = store.is_set_for_new_installments_view %}
@@ -198,32 +170,57 @@
                                         {% if product.stock_control %}
                                             <meta itemprop="inventoryLevel" content="{{ product.stock }}" />
                                             <meta itemprop="availability" href="http://schema.org/{{ product.stock ? 'InStock' : 'OutOfStock' }}" content="http://schema.org/{{ product.stock ? 'InStock' : 'OutOfStock' }}" />
+											<script>
+
+											var today = new Date();
+
+											var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+
+											</script>
+											<meta itemprop="priceValidUntil"  content = "date" />
+				
                                         {% endif %}
 
-                                        {% if product.promotional_offer and not product.promotional_offer.script.is_percentage_off and product.display_price %}
-                                            <h6 class="m-top text-primary">
-                                            {% if product.promotional_offer.script.is_discount_for_quantity %}
-                                                {% for threshold in product.promotional_offer.parameters %}
-                                                   {{ "¡{1}% OFF comprando {2} o más!" | translate(threshold.discount_decimal_percentage * 100, threshold.quantity) }}
-                                                {% endfor %}
-                                            {% else %}
-                                                {{ "¡Llevá {1} y pagá {2}!" | translate(product.promotional_offer.script.quantity_to_take, product.promotional_offer.script.quantity_to_pay) }}
+                                        <div class="promocoes">
+                                            {% if product.promotional_offer and not product.promotional_offer.script.is_percentage_off and product.display_price %}
+                                                <h6 class="m-top text-primary">
+                                                {% if product.promotional_offer.script.is_discount_for_quantity %}
+                                                    {% for threshold in product.promotional_offer.parameters %}
+                                                    {{ "¡{1}% OFF comprando {2} o más!" | translate(threshold.discount_decimal_percentage * 100, threshold.quantity) }}
+                                                    {% endfor %}
+                                                {% else %}
+                                                    {{ "¡Llevá {1} y pagá {2}!" | translate(product.promotional_offer.script.quantity_to_take, product.promotional_offer.script.quantity_to_pay) }}
+                                                {% endif %}
+                                                </h6>
+                                                {% if product.promotional_offer.scope_type == 'categories' %}
+                                                    <p class="font-small m-top-half">{{ "Válido para" | translate }} {{ "este producto y todos los de la categoría" | translate }}:
+                                                    {% for scope_value in product.promotional_offer.scope_value_info %}
+                                                    {{ scope_value.name }}{% if not loop.last %}, {% else %}.{% endif %}
+                                                    {% endfor %}</br>{{ "Podés combinar esta promoción con otros productos de la misma categoría." | translate }}</p>
+                                                {% elseif product.promotional_offer.scope_type == 'all'  %}
+                                                    <p class="font-small m-top-half">{{ "Vas a poder aprovechar esta promoción en cualquier producto de la tienda." | translate }}</p>
+                                                {% endif %}
                                             {% endif %}
-                                            </h6>
-                                            {% if product.promotional_offer.scope_type == 'categories' %}
-                                                <p class="font-small m-top-half">{{ "Válido para" | translate }} {{ "este producto y todos los de la categoría" | translate }}:
-                                                {% for scope_value in product.promotional_offer.scope_value_info %}
-                                                   {{ scope_value.name }}{% if not loop.last %}, {% else %}.{% endif %}
-                                                {% endfor %}</br>{{ "Podés combinar esta promoción con otros productos de la misma categoría." | translate }}</p>
-                                            {% elseif product.promotional_offer.scope_type == 'all'  %}
-                                                <p class="font-small m-top-half">{{ "Vas a poder aprovechar esta promoción en cualquier producto de la tienda." | translate }}</p>
-                                            {% endif %}
-                                        {% endif %}
+                                        </div>
                                     </div>
                                 </div>
 
                                 <meta itemprop="image" content="{{ 'http:' ~ product.featured_image | product_image_url('large') }}" />
                                 <meta itemprop="url" content="{{ product.social_url }}" />
+								<meta itemprop="brand" content="7MBOOTS"/>
+								<meta itemprop="sku" content="{{ product.sku }}" />
+								<meta itemprop="review" itemtype="https://schema.org/review"  content="Botas Texanas em Couro" />
+								
+								
+							{%if product.available %}
+								<meta itemprop="availability" itemscope itemtype= "https://schema.org/Offer" content="in stock">
+								{% else %}
+								<meta itemprop="availability"  itemscope itemtype= "https://schema.org/Offer" content =" out of stock">
+								{% endif %}
+				
+				
+				
+
                                 {% if page_description %}
                                     <meta itemprop="description" content="{{ page_description }}" />
                                 {% endif %}
@@ -234,6 +231,7 @@
                                     <div itemprop="weight" itemscope itemtype="http://schema.org/QuantitativeValue" style="display:none;">
                                         <meta itemprop="unitCode" content="{{ product.weight_unit | iso_to_uncefact}}" />
                                         <meta itemprop="value" content="{{ product.weight}}" />
+										
                                     </div>
                                 {% endif %}
                             </div>
